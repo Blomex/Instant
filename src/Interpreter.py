@@ -6,7 +6,7 @@ from InstantParser import InstantParser
 from BetterVisitor import InstantVisitor
 def main(argv):
     # text = InputStream(input(">"))
-    if sys.argv[1]:
+    if len(sys.argv) == 2:
         file = sys.argv[1]
         filename, file_extension = os.path.splitext(file)
         result_file_path = filename + ".j"
@@ -15,7 +15,9 @@ def main(argv):
         stream = CommonTokenStream(lexer)
         parser = InstantParser(stream)
         tree = parser.prog()
-        ast = InstantVisitor().visitProg(tree)
+        # need to pass name to visitor, to create class with such name
+        name = os.path.basename(file)
+        ast = InstantVisitor().visitProg(tree, name)
         if parser.getNumberOfSyntaxErrors() == 0:
             result_file = open(result_file_path, "w+")
             for line in ast:
@@ -25,6 +27,8 @@ def main(argv):
         else:
             print("Code generation failed due to parsing error", file=sys.stderr)
             sys.exit(1)
+    else:
+        print("Wrong number of arguments. 1 argument expected.")
     #print(tree.toStringTree(recog=parser))
         #ast = InstantVisitor().visitCompileUnit(tree)
         #value = EvaluateExpressionVisitor().visit(ast)

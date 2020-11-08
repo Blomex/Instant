@@ -20,7 +20,7 @@ class InstantVisitor(ParseTreeVisitor):
         self.instructions = []
 
     # Visit a parse tree produced by InstantParser#prog.
-    def visitProg(self, ctx:InstantParser.ProgContext):
+    def visitProg(self, ctx:InstantParser.ProgContext, class_name):
         if ctx.stmt():
             self.visitChildren(ctx) # just to get maxStackSize
             self.instructions.clear()
@@ -28,7 +28,7 @@ class InstantVisitor(ParseTreeVisitor):
             self.errors.clear()
             self.local_vars.clear()
             self.visitChildren(ctx)  # now every statement knows what is maximum stack size.
-            self.instructions.insert(0, ".class public Main")
+            self.instructions.insert(0, ".class public {}".format(class_name))
             self.instructions.insert(1, ".super java/lang/Object")
             self.instructions.insert(2, ".method public static main([Ljava/lang/String;)V")
             self.instructions.insert(3, ".limit stack {}".format(self.maxStackSize))
