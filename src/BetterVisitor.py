@@ -5,7 +5,6 @@ if __name__ is not None and "." in __name__:
 else:
     from InstantParser import InstantParser
 import sys
-from TreeNode import NumberNode, InfixExpressionNode, LiteralNode
 
 
 # This class defines a complete generic visitor for a parse tree produced by InstantParser.
@@ -35,11 +34,7 @@ class InstantVisitor(ParseTreeVisitor):
             self.instructions.insert(4, ".limit locals {}".format(max(len(self.local_vars), 1)))
             self.instructions.append("return")
             self.instructions.append(".end method")
-            if len(self.errors) == 0:
-                pass
-                # for i in self.instructions:
-                #     print(i)
-            else:
+            if len(self.errors) > 0:
                 print("Errors found: {}".format(len(self.errors)), file=sys.stderr)
                 for error in self.errors:
                     print(error, file=sys.stderr)
