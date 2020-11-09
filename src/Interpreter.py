@@ -15,8 +15,8 @@ def main(argv):
         stream = CommonTokenStream(lexer)
         parser = InstantParser(stream)
         tree = parser.prog()
-        # need to pass file name to visitor, to create class with such name
-        name = os.path.basename(file)
+        # need to pass name to visitor, to create class with such name
+        name = os.path.basename(filename)
         ast = InstantVisitor().visitProg(tree, name)
         if parser.getNumberOfSyntaxErrors() == 0:
             result_file = open(result_file_path, "w+")
