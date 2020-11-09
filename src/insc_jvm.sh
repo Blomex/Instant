@@ -3,6 +3,6 @@
 if source env/bin/activate; \
 	python3 ./src/Interpreter.py "$@"; \
 then
-  java -jar ./lib/jasmin.jar -d $(dirname -- "$@") "$outfile"
+  java -jar ./lib/jasmin.jar -d $(dirname -- "$@") "${@%.ins}.j"
 fi
 
