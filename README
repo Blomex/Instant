@@ -1,0 +1,45 @@
+Rozwiazanie mozna skompilowac poleceniem make w katalogu, 
+	w ktorym znajduje sie plik makefile.
+przykladowe uzycie:
+make
+./insc_jvm test01.ins
+./insc_jvm ./tests/test0001.ins
+
+W plikach src dolaczam rowniez gramatyke antlr4 na podstawie ktorej zostal
+	wygenerowany parser i lekser.
+
+kompilowanie zadania zaklada obecnosc python3 i venv. na students
+	sa one dostepne.
+
+w rozwiazaniu zostala uzyta biblioteka antlr4-python3-runtime, ktora
+	jest niezbedna do uzywania wygenerowanego parsera/leksera.
+jest instalowana w momencie kompilacji w wirtualnym srodowisku.
+
+
+
+Pliki w katalogu lib:
+jasmin.jar - assembler jasmina, tworzacy z plikow .j pliki .class
+runtime.ll - biblioteka pomocnicza do llvm zawierajaca funkcje printInt
+
+pliki w katalogu src:
+InstantLexer.py / InstantParser.py - automatycznie wygenerowany
+	parser i lekser.
+
+Interpreter.py - program generujacy kod jasmina (pliki .j)
+Interpreter_LLVM.py - program generujacy kod llvm (pliki .ll)
+BetterVisitor.py - implementacja kompilatora JVM
+InstantVisitor_LLVM - implementacja kompilatora LLVM
+insc_jvm.sh - skrypt uruchamiajacy Interpreter.py a nastepnie jasmina, 
+	zeby utworzyc rowniez plik .class
+	
+insc_llvm.sh - skrypt uruchamiajacy Interpreter_LLVM.py a nastepnie
+	llvma, aby utworzyc poprawne pliki .ll i .bc
+	
+skryptow nie nalezy wywolywac w katalogu src. Po uzyciu make w katalogu
+	glownym pojawia sie kopie tych skryptow z odpowiednimi prawami do
+	wykonania i to z nich nalezy skorzystac.
+
+programy interpreter.py / interpreter_llvm.py akceptuja tylko 1 plik
+	jako argument. Przy podaniu wiecej niz jednego lub podaniu 
+	niepoprawnego programu pliki .j lub .ll nie zostana wygenerowane.
+	
