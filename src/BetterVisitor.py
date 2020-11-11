@@ -20,24 +20,23 @@ class InstantVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by InstantParser#prog.
     def visitProg(self, ctx:InstantParser.ProgContext, class_name):
-        if ctx.stmt():
-            self.visitChildren(ctx) # just to get maxStackSize
-            self.instructions.clear()
-            self.stackSize = 0
-            self.errors.clear()
-            self.local_vars.clear()
-            self.visitChildren(ctx)  # now every statement knows what is maximum stack size.
-            self.instructions.insert(0, ".class public {}".format(class_name))
-            self.instructions.insert(1, ".super java/lang/Object")
-            self.instructions.insert(2, ".method public static main([Ljava/lang/String;)V")
-            self.instructions.insert(3, ".limit stack {}".format(self.maxStackSize))
-            self.instructions.insert(4, ".limit locals {}".format(max(len(self.local_vars), 1)))
-            self.instructions.append("return")
-            self.instructions.append(".end method")
-            if len(self.errors) > 0:
-                print("Errors found: {}".format(len(self.errors)), file=sys.stderr)
-                for error in self.errors:
-                    print(error, file=sys.stderr)
+        self.visitChildren(ctx) # just to get maxStackSize
+        self.instructions.clear()
+        self.stackSize = 0
+        self.errors.clear()
+        self.local_vars.clear()
+        self.visitChildren(ctx)  # now every statement knows what is maximum stack size.
+        self.instructions.insert(0, ".class public {}".format(class_name))
+        self.instructions.insert(1, ".super java/lang/Object")
+        self.instructions.insert(2, ".method public static main([Ljava/lang/String;)V")
+        self.instructions.insert(3, ".limit stack {}".format(self.maxStackSize))
+        self.instructions.insert(4, ".limit locals {}".format(max(len(self.local_vars), 1)))
+        self.instructions.append("return")
+        self.instructions.append(".end method")
+        if len(self.errors) > 0:
+            print("Errors found: {}".format(len(self.errors)), file=sys.stderr)
+            for error in self.errors:
+                print(error, file=sys.stderr)
         return self.instructions
 
     # Visit a parse tree produced by InstantParser#stmt.
