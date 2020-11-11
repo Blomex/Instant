@@ -1,13 +1,16 @@
 # Generated from .\Instant.g4 by ANTLR 4.8
 from antlr4 import *
+
 if __name__ is not None and "." in __name__:
     from .InstantParser import InstantParser
 else:
     from InstantParser import InstantParser
 
 from InstantLexer import InstantLexer
+
+
 # This class defines a complete generic visitor for a parse tree produced by InstantParser.
-# text = FileStream("test")
+# text = FileStream("file/path")
 # lexer = InstantLexer(text)
 # stream = CommonTokenStream(lexer)
 # parser = InstantParser(stream)
@@ -17,8 +20,9 @@ class InstantVisitor(ParseTreeVisitor):
         self.instructions = []
         self.register_counter = 0
         self.local_vars = set()
+
     # Visit a parse tree produced by InstantParser#prog.
-    def visitProg(self, ctx:InstantParser.ProgContext):
+    def visitProg(self, ctx: InstantParser.ProgContext):
         self.instructions.append("declare void @printInt(i32)")
         self.instructions.append("define i32 @main() {")
         self.visitChildren(ctx)
@@ -26,9 +30,8 @@ class InstantVisitor(ParseTreeVisitor):
         self.instructions.append("}")
         return self.instructions
 
-
     # Visit a parse tree produced by InstantParser#stmt.
-    def visitStmt(self, ctx:InstantParser.StmtContext):
+    def visitStmt(self, ctx: InstantParser.StmtContext):
         if ctx.Ident():
             variable = str(ctx.Ident())
             register = "%{}".format(variable)
@@ -42,7 +45,7 @@ class InstantVisitor(ParseTreeVisitor):
             self.instructions.append("call void @printInt(i32 {})".format(register))
 
     # Visit a parse tree produced by InstantParser#exp1.
-    def visitExp1(self, ctx:InstantParser.Exp1Context):
+    def visitExp1(self, ctx: InstantParser.Exp1Context):
         if ctx.OP_ADD():
             left = self.visit(ctx.left)
             right = self.visit(ctx.right)
@@ -53,9 +56,8 @@ class InstantVisitor(ParseTreeVisitor):
         elif ctx.exp2():
             return self.visitExp2(ctx.exp2())
 
-
     # Visit a parse tree produced by InstantParser#exp2.
-    def visitExp2(self, ctx:InstantParser.Exp2Context):
+    def visitExp2(self, ctx: InstantParser.Exp2Context):
         if ctx.Ident():
             variable = "%{}".format(str(ctx.Ident()))
             register = "%r{}".format(self.register_counter)
@@ -66,7 +68,7 @@ class InstantVisitor(ParseTreeVisitor):
             return str(ctx.Integer())
         elif ctx.PAREN():
             return self.visitExp1(ctx.exp1())
-        else: #complex expression
+        else:  # complex expression
             left = self.visit(ctx.left)
             right = self.visit(ctx.right)
             register = "%r{}".format(self.register_counter)
@@ -78,7 +80,6 @@ class InstantVisitor(ParseTreeVisitor):
                 self.instructions.append("{} = sdiv i32 {}, {}".format(register, left, right))
             self.register_counter += 1
             return register
-
 
 
 del InstantParser

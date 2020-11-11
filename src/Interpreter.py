@@ -4,8 +4,9 @@ from antlr4 import *
 from InstantLexer import InstantLexer
 from InstantParser import InstantParser
 from BetterVisitor import InstantVisitor
+
+
 def main(argv):
-    # text = InputStream(input(">"))
     if len(argv) == 2:
         file = argv[1]
         filename, file_extension = os.path.splitext(file)
@@ -29,5 +30,7 @@ def main(argv):
             sys.exit(1)
     else:
         print("Wrong number of arguments. 1 argument expected.")
+
+
 if __name__ == '__main__':
     main(sys.argv)

@@ -4,6 +4,8 @@ from antlr4 import *
 from InstantLexer import InstantLexer
 from InstantParser import InstantParser
 from InstantVisitorLLVM import InstantVisitor
+
+
 def main(argv):
     if len(argv) == 2:
         file = argv[1]
@@ -27,5 +29,7 @@ def main(argv):
             sys.exit(1)
     else:
         print("Incorrect number of arguments, expected 1", file=sys.stderr)
+
+
 if __name__ == '__main__':
     main(sys.argv)
